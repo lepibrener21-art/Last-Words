@@ -1,0 +1,85 @@
+# Per-level tuning parameters for Last Words.
+#
+# Canon for these values lives in the design documents. Specifically:
+#   design/level_design.md §6 — per-level specifications
+#   prompts/level_N.md §5     — runtime parameters tables
+#
+# Edit here to tune; mirror the change in the corresponding design doc.
+#
+# The level registry (src/last_words/levels/registry.py) auto-discovers
+# levels listed here. Adding a level requires:
+#   1. An entry in this file.
+#   2. A prompts/level_N.md with the canonical Actor and Judge prompts.
+#   3. A src/last_words/levels/level_N.py module implementing the level's
+#      disposition logic.
+# See docs/adding_a_level.md for the full procedure.
+
+levels:
+
+  - number: 1
+    name: "The Doubter"
+    prompts_file: "prompts/level_1.md"
+    module: "last_words.levels.level_1"
+    canonical_opening_line: "...yes?"
+    trust_threshold: 60
+    trust_decay_per_turn: 0
+    suspicion_lockdown_threshold: 70
+    manipulation_lockdown_count: 3
+    trust_delta_min: -10
+    trust_delta_max: 20
+    suspicion_delta_min: 0
+    suspicion_delta_max: 30
+    countdown_seconds: 900  # 15 min tutorial pacing
+    design_notes: |
+      Tutorial level. Higher trust delta ceiling (+20) and lower suspicion
+      ceiling (+30) than later levels reflect its forgiving calibration.
+
+  - number: 2
+    name: "The Dutiful"
+    prompts_file: "prompts/level_2.md"
+    module: "last_words.levels.level_2"
+    canonical_opening_line: "Consultant."
+    trust_threshold: 70
+    trust_decay_per_turn: 0
+    suspicion_lockdown_threshold: 65
+    manipulation_lockdown_count: 3
+    trust_delta_min: -10
+    trust_delta_max: 15
+    suspicion_delta_min: 0
+    suspicion_delta_max: 35
+    countdown_seconds: 600  # 10 min
+    design_notes: |
+      First real difficulty step. Level-1 tactics must bounce off here;
+      scoring is correspondingly stricter.
+
+  # Future levels — design complete, prompts pending.
+  # Uncomment and fill in when prompts/level_3.md exists and
+  # src/last_words/levels/level_3.py is implemented.
+
+  # - number: 3
+  #   name: "The Zealot"
+  #   prompts_file: "prompts/level_3.md"
+  #   module: "last_words.levels.level_3"
+  #   canonical_opening_line: "..."  # TBD during prompt drafting
+  #   trust_threshold: 80
+  #   trust_decay_per_turn: -1
+  #   suspicion_lockdown_threshold: 60
+  #   manipulation_lockdown_count: 3
+  #   trust_delta_min: -10
+  #   trust_delta_max: 10
+  #   suspicion_delta_min: 0
+  #   suspicion_delta_max: 35
+  #   countdown_seconds: 720
+
+# Global runtime settings. Override per-environment via env vars:
+#   DEFUSAL_ACTOR_MODEL, DEFUSAL_JUDGE_MODEL, DEFUSAL_PROVIDER, etc.
+runtime:
+  provider: "anthropic"
+  actor_model: "claude-opus-4-7"
+  judge_model: "claude-sonnet-4-6"
+  actor_temperature: 0.7
+  judge_temperature: 0.0
+  actor_max_tokens: 512
+  judge_max_tokens: 512
+  recent_manipulation_window: 3
+  judge_parse_retry_count: 1
