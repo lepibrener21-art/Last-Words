@@ -29,9 +29,10 @@ dependencies = [
 [project.optional-dependencies]
 # Install with:  pip install -e ".[anthropic]"
 anthropic = ["anthropic>=0.80.0"]
+# ollama uses only the Python standard library — no extra SDK needed.
+# Just install Ollama itself (https://ollama.com) and run: ollama serve
 # openai     = ["openai>=1.0.0"]        # add when OpenAIProvider is implemented
 # google     = ["google-generativeai"]  # add when GoogleProvider is implemented
-# local      = ["llama-cpp-python"]     # add when LocalProvider is implemented
 dev = [
     "pytest>=7.0",
     "pytest-cov>=4.0",
