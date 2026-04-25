@@ -76,7 +76,20 @@ def _try_register_anthropic() -> None:
 
 _try_register_anthropic()
 
+
+def _try_register_ollama() -> None:
+    try:
+        from last_words.providers.ollama_provider import (
+            create_ollama_provider,
+        )
+        register_provider("ollama", create_ollama_provider)
+    except ImportError:
+        # Should never happen — OllamaProvider uses only stdlib.
+        pass
+
+
+_try_register_ollama()
+
 # Future providers register themselves similarly:
 # _try_register_openai()
 # _try_register_google()
-# _try_register_local()
